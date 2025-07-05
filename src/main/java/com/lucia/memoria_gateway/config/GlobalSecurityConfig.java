@@ -1,7 +1,6 @@
 package com.lucia.memoria_gateway.config;
 
-import java.util.Base64;
-import javax.crypto.spec.SecretKeySpec;
+import java.security.interfaces.RSAPublicKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,9 +29,7 @@ public class GlobalSecurityConfig {
   }
 
   @Bean
-  public ReactiveJwtDecoder jwtDecoder(@Value("${jwt.secret}") String jwtSecret) {
-    byte[] keyBytes = Base64.getDecoder().decode(jwtSecret);
-    SecretKeySpec key = new SecretKeySpec(keyBytes, "HmacSHA256");
-    return NimbusReactiveJwtDecoder.withSecretKey(key).build();
+  public ReactiveJwtDecoder jwtDecoder(@Value("${jwt.public-key}") RSAPublicKey publicKey) {
+    return NimbusReactiveJwtDecoder.withPublicKey(publicKey).build();
   }
 }
